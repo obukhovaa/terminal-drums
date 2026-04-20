@@ -1,0 +1,13 @@
+[track]
+name = "Heavy Rock 1"
+artist = "Terminal Drums"
+description = "Rock drum pattern"
+difficulty_stars = 2
+default_bpm = 130
+genre = "Rock"
+
+[midi]
+# channel = 10
+
+[backtrack]
+offset_ms = 0

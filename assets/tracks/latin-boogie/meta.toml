@@ -1,0 +1,13 @@
+[track]
+name = "Latin Boogie"
+artist = "Terminal Drums"
+description = "Latin drum pattern"
+difficulty_stars = 3
+default_bpm = 110
+genre = "Latin"
+
+[midi]
+# channel = 10
+
+[backtrack]
+offset_ms = 0

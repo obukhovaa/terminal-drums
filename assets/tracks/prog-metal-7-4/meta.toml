@@ -1,0 +1,12 @@
+[track]
+name = "Prog Metal 7/4"
+artist = "Terminal Drums"
+description = "7/4 metal pattern"
+difficulty_stars = 4
+default_bpm = 130
+genre = "Metal"
+
+[midi]
+
+[backtrack]
+offset_ms = 0

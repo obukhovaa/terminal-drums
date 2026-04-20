@@ -1,0 +1,12 @@
+[track]
+name = "Prog Epic 11/8"
+artist = "Terminal Drums"
+description = "11/8 progressive pattern"
+difficulty_stars = 5
+default_bpm = 145
+genre = "Progressive"
+
+[midi]
+
+[backtrack]
+offset_ms = 0

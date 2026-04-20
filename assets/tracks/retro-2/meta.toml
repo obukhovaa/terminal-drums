@@ -1,0 +1,13 @@
+[track]
+name = "Retro 2"
+artist = "Terminal Drums"
+description = "Retro drum pattern"
+difficulty_stars = 3
+default_bpm = 120
+genre = "Retro"
+
+[midi]
+# channel = 10
+
+[backtrack]
+offset_ms = 0

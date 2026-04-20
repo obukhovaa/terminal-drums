@@ -1,0 +1,5 @@
+.opencode
+.claude/settings*
+/tmp
+target/
+.claude/worktrees/

@@ -1,0 +1,13 @@
+[track]
+name = "Punk Rock 2"
+artist = "Terminal Drums"
+description = "Punk drum pattern"
+difficulty_stars = 3
+default_bpm = 175
+genre = "Punk"
+
+[midi]
+# channel = 10
+
+[backtrack]
+offset_ms = 0

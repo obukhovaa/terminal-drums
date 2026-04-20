@@ -1,0 +1,13 @@
+[track]
+name = "Reggae"
+artist = "Terminal Drums"
+description = "Reggae drum pattern"
+difficulty_stars = 3
+default_bpm = 80
+genre = "Reggae"
+
+[midi]
+# channel = 10
+
+[backtrack]
+offset_ms = 0

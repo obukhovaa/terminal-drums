@@ -1,0 +1,165 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+*"
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  BINARY_NAME: tdrums
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - target: x86_64-apple-darwin
+            os: macos-13
+          - target: aarch64-apple-darwin
+            os: macos-14
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libasound2-dev
+
+      - name: Build release binary
+        run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Package archive
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          ARCHIVE="${BINARY_NAME}-${VERSION}-${{ matrix.target }}"
+          mkdir -p "${ARCHIVE}"
+          cp "target/${{ matrix.target }}/release/${BINARY_NAME}" "${ARCHIVE}/"
+          cp -r assets "${ARCHIVE}/"
+          cp README.md "${ARCHIVE}/" 2>/dev/null || true
+          tar czf "${ARCHIVE}.tar.gz" "${ARCHIVE}"
+          echo "ARCHIVE=${ARCHIVE}.tar.gz" >> $GITHUB_ENV
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          path: ${{ env.ARCHIVE }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract version
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Collect archives
+        run: |
+          mkdir -p dist
+          find artifacts -name '*.tar.gz' -exec mv {} dist/ \;
+          ls -la dist/
+
+      - name: Generate checksums
+        working-directory: dist
+        run: sha256sum *.tar.gz > sha256sums.txt
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            dist/*.tar.gz
+            dist/sha256sums.txt
+
+  homebrew:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Generate and push Homebrew formula
+        env:
+          HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          VERSION: ${{ needs.release.outputs.version }}
+        run: |
+          REPO="obukhovaa/terminal-drums"
+
+          SHA_DARWIN_ARM64=$(sha256sum artifacts/aarch64-apple-darwin/*.tar.gz | awk '{print $1}')
+          SHA_DARWIN_AMD64=$(sha256sum artifacts/x86_64-apple-darwin/*.tar.gz | awk '{print $1}')
+          SHA_LINUX_AMD64=$(sha256sum artifacts/x86_64-unknown-linux-gnu/*.tar.gz | awk '{print $1}')
+
+          cat > formula.rb << EOF
+          class Tdrums < Formula
+            desc "Terminal-based drum training app with MIDI visualization and vim keybindings"
+            homepage "https://github.com/${REPO}"
+            version "${VERSION}"
+            license "MIT"
+
+            on_macos do
+              on_arm do
+                url "https://github.com/${REPO}/releases/download/v${VERSION}/tdrums-${VERSION}-aarch64-apple-darwin.tar.gz"
+                sha256 "${SHA_DARWIN_ARM64}"
+              end
+              on_intel do
+                url "https://github.com/${REPO}/releases/download/v${VERSION}/tdrums-${VERSION}-x86_64-apple-darwin.tar.gz"
+                sha256 "${SHA_DARWIN_AMD64}"
+              end
+            end
+
+            on_linux do
+              on_intel do
+                url "https://github.com/${REPO}/releases/download/v${VERSION}/tdrums-${VERSION}-x86_64-unknown-linux-gnu.tar.gz"
+                sha256 "${SHA_LINUX_AMD64}"
+              end
+            end
+
+            def install
+              bin.install "tdrums"
+              (share/"tdrums/assets").install Dir["assets/*"]
+            end
+
+            test do
+              assert_match version.to_s, shell_output("#{bin}/tdrums --version")
+            end
+          end
+          EOF
+
+          # Remove leading whitespace from heredoc
+          sed -i 's/^          //' formula.rb
+
+          git clone "https://x-access-token:${HOMEBREW_TAP_TOKEN}@github.com/obukhovaa/homebrew-tap.git" tap
+          mkdir -p tap/Formula
+          cp formula.rb tap/Formula/tdrums.rb
+          cd tap
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/tdrums.rb
+          git commit -m "tdrums ${VERSION}"
+          git push

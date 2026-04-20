@@ -1,0 +1,21 @@
+[kit]
+name = "Slam"
+author = "RZLM"
+description = "Heavy slam kit with electronic percussion"
+
+[samples]
+kick = "kick.wav"
+snare = "snare.wav"
+cross_stick = "cross_stick.wav"
+hihat_closed = "hihat_closed.wav"
+hihat_open = "hihat_open.wav"
+hihat_pedal = "hihat_pedal.wav"
+crash1 = "crash1.wav"
+crash2 = "crash2.wav"
+china = "china.wav"
+splash = "splash.wav"
+ride = "ride.wav"
+ride_bell = "ride_bell.wav"
+tom_mid = "tom_mid.wav"
+tom_high = "tom_high.wav"
+tom_low = "tom_low.wav"

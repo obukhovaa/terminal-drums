@@ -1,0 +1,13 @@
+[track]
+name = "Heavy Rock 4"
+artist = "Terminal Drums"
+description = "Rock drum pattern"
+difficulty_stars = 5
+default_bpm = 145
+genre = "Rock"
+
+[midi]
+# channel = 10
+
+[backtrack]
+offset_ms = 0

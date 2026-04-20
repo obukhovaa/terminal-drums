@@ -1,0 +1,13 @@
+[track]
+name = "Blues Shuffle"
+artist = "Terminal Drums"
+description = "12/8 swing feel with ride pattern — classic blues shuffle groove"
+difficulty_stars = 3
+default_bpm = 90
+genre = "Blues"
+
+[midi]
+# channel = 10  # Optional: override auto-detection (1-16)
+
+[backtrack]
+offset_ms = 0

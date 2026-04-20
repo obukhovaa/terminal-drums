@@ -1,0 +1,12 @@
+[track]
+name = "Take Five 5/4"
+artist = "Terminal Drums"
+description = "5/4 jazz pattern"
+difficulty_stars = 3
+default_bpm = 175
+genre = "Jazz"
+
+[midi]
+
+[backtrack]
+offset_ms = 0

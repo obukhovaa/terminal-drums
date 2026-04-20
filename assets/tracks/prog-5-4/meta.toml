@@ -1,0 +1,12 @@
+[track]
+name = "Prog 5/4"
+artist = "Terminal Drums"
+description = "5/4 progressive pattern"
+difficulty_stars = 3
+default_bpm = 120
+genre = "Progressive"
+
+[midi]
+
+[backtrack]
+offset_ms = 0

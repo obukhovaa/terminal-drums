@@ -1,0 +1,13 @@
+[track]
+name = "Pop Rock"
+artist = "Terminal Drums"
+description = "Pop Rock drum pattern"
+difficulty_stars = 3
+default_bpm = 115
+genre = "Pop Rock"
+
+[midi]
+# channel = 10
+
+[backtrack]
+offset_ms = 0

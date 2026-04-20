@@ -1,0 +1,13 @@
+[track]
+name = "Funk Groove"
+artist = "Terminal Drums"
+description = "4/4 funk with syncopated kick, ghost snares, and 16th-note hi-hat variations"
+difficulty_stars = 4
+default_bpm = 100
+genre = "Funk"
+
+[midi]
+# channel = 10  # Optional: override auto-detection (1-16)
+
+[backtrack]
+offset_ms = 0

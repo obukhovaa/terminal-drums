@@ -1,0 +1,12 @@
+[track]
+name = "Odd Groove 9/8"
+artist = "Terminal Drums"
+description = "9/8 progressive pattern"
+difficulty_stars = 4
+default_bpm = 140
+genre = "Progressive"
+
+[midi]
+
+[backtrack]
+offset_ms = 0

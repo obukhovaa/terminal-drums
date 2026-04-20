@@ -1,0 +1,13 @@
+[track]
+name = "Rock 3"
+artist = "Terminal Drums"
+description = "Rock drum pattern"
+difficulty_stars = 4
+default_bpm = 130
+genre = "Rock"
+
+[midi]
+# channel = 10
+
+[backtrack]
+offset_ms = 0

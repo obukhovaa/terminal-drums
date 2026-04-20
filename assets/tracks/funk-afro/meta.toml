@@ -1,0 +1,13 @@
+[track]
+name = "Funk Afro"
+artist = "Terminal Drums"
+description = "Funk drum pattern"
+difficulty_stars = 3
+default_bpm = 105
+genre = "Funk"
+
+[midi]
+# channel = 10
+
+[backtrack]
+offset_ms = 0

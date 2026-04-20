@@ -1,0 +1,13 @@
+[track]
+name = "Metal 1"
+artist = "Terminal Drums"
+description = "Metal drum pattern"
+difficulty_stars = 2
+default_bpm = 150
+genre = "Metal"
+
+[midi]
+# channel = 10
+
+[backtrack]
+offset_ms = 0

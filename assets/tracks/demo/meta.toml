@@ -1,0 +1,13 @@
+[track]
+name = "Demo Track"
+artist = "Terminal Drums"
+description = "A simple demo track for development and testing"
+difficulty_stars = 2
+default_bpm = 120
+genre = "Rock"
+
+[midi]
+# channel = 10  # Optional: override auto-detection (1-16)
+
+[backtrack]
+offset_ms = 0
