@@ -683,13 +683,13 @@ fn handle_input(
                 VimAction::DrumHit(piece) => {
                     handle_drum_hit(state, ctx, piece, event.instant);
                 }
-                VimAction::EnterInsert | VimAction::EnterInsertWithSlash => {
+                VimAction::EnterCommand => {
                     state.input_mode = ctx.vim.mode;
                     state.console_input = ctx.vim.console_input.clone();
                     state.console_cursor = ctx.vim.console_cursor;
                     update_autocomplete(state, ctx);
                 }
-                VimAction::ExitInsert => {
+                VimAction::ExitCommand => {
                     state.input_mode = InputMode::Normal;
                     state.console_input.clear();
                     state.console_cursor = 0;
@@ -709,7 +709,7 @@ fn handle_input(
                     };
 
                     // If the command needs args and none were provided, fill input
-                    // and stay in insert mode so the user can type the argument.
+                    // and stay in command mode so the user can type the argument.
                     let needs_fill = if state.autocomplete_selected.is_some() {
                         matches!(
                             ctx.command_registry.parse(&effective_cmd),
@@ -725,11 +725,11 @@ fn handle_input(
                             .arg_hint(&effective_cmd)
                             .unwrap_or_default();
                         let filled = format!("{} ", effective_cmd);
-                        // Restore vim to Insert mode (exit_insert already fired)
-                        ctx.vim.mode = InputMode::Insert;
+                        // Restore vim to Command mode (exit_command already fired)
+                        ctx.vim.mode = InputMode::Command;
                         ctx.vim.console_input = filled.clone();
                         ctx.vim.console_cursor = filled.len();
-                        state.input_mode = InputMode::Insert;
+                        state.input_mode = InputMode::Command;
                         state.console_input = filled;
                         state.console_cursor = ctx.vim.console_cursor;
                         state.autocomplete_suggestions.clear();

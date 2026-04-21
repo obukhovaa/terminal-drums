@@ -8,8 +8,8 @@ use crate::midi::types::DrumPiece;
 pub enum InputMode {
     /// Normal mode: key presses map to drum hits.
     Normal,
-    /// Insert mode: key presses go to the command console.
-    Insert,
+    /// Command mode: key presses go to the command console.
+    Command,
 }
 
 impl Default for InputMode {
@@ -22,12 +22,10 @@ impl Default for InputMode {
 pub enum VimAction {
     /// A drum piece was struck.
     DrumHit(DrumPiece),
-    /// Transition to Insert mode (shows console).
-    EnterInsert,
-    /// Transition to Insert mode with '/' pre-filled (vim ':' behaviour).
-    EnterInsertWithSlash,
+    /// Transition to Command mode with '/' pre-filled (vim ':' behaviour).
+    EnterCommand,
     /// Transition back to Normal mode, clearing the console.
-    ExitInsert,
+    ExitCommand,
     /// Execute the current console_input as a command, then clear it.
     ExecuteCommand(String),
     /// Accept the currently highlighted autocomplete suggestion.
@@ -72,7 +70,7 @@ impl VimModeHandler {
     pub fn handle_key(&mut self, key: KeyEvent, key_map: &KeyMap) -> VimAction {
         match self.mode {
             InputMode::Normal => self.handle_normal(key, key_map),
-            InputMode::Insert => self.handle_insert(key),
+            InputMode::Command => self.handle_command(key),
         }
     }
 
@@ -86,19 +84,12 @@ impl VimModeHandler {
         }
 
         match key.code {
-            // ':' — enter INSERT with '/' pre-filled (vim-style command prefix)
+            // ':' — enter COMMAND mode with '/' pre-filled (vim-style command prefix)
             KeyCode::Char(':') => {
-                self.mode = InputMode::Insert;
+                self.mode = InputMode::Command;
                 self.console_input = "/".to_string();
                 self.console_cursor = 1;
-                VimAction::EnterInsertWithSlash
-            }
-            // 'i' — enter INSERT mode (empty console)
-            KeyCode::Char('i') => {
-                self.mode = InputMode::Insert;
-                self.console_input.clear();
-                self.console_cursor = 0;
-                VimAction::EnterInsert
+                VimAction::EnterCommand
             }
             // All other keys: check key map first
             _ => {
@@ -111,25 +102,25 @@ impl VimModeHandler {
         }
     }
 
-    fn handle_insert(&mut self, key: KeyEvent) -> VimAction {
-        // Ctrl+C in INSERT → cancel (return to Normal, do NOT quit)
+    fn handle_command(&mut self, key: KeyEvent) -> VimAction {
+        // Ctrl+C in COMMAND → cancel (return to Normal, do NOT quit)
         if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('c') {
-            self.exit_insert();
-            return VimAction::ExitInsert;
+            self.exit_command();
+            return VimAction::ExitCommand;
         }
 
         match key.code {
             // Esc → return to Normal, clear console
             KeyCode::Esc => {
-                self.exit_insert();
-                VimAction::ExitInsert
+                self.exit_command();
+                VimAction::ExitCommand
             }
             // Enter → if autocomplete is visible, this will be handled as AcceptAutocomplete
             // by the app layer; otherwise execute the typed command.
             KeyCode::Enter => {
                 // The app layer checks if autocomplete is active and dispatches accordingly.
                 let cmd = self.console_input.clone();
-                self.exit_insert();
+                self.exit_command();
                 VimAction::ExecuteCommand(cmd)
             }
             // Tab → cycle autocomplete down
@@ -160,7 +151,7 @@ impl VimModeHandler {
     }
 
     /// Transition to Normal mode and clear the console.
-    fn exit_insert(&mut self) {
+    fn exit_command(&mut self) {
         self.mode = InputMode::Normal;
         self.console_input.clear();
         self.console_cursor = 0;

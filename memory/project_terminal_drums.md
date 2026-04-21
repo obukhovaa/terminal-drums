@@ -16,4 +16,4 @@ Terminal Drums is a TUI-based drum training application targeting programmers wh
 - `spec/init-project/SPEC.md` — Single source of truth for all implementation details
 - `PROGRESS.md` — Phase tracking with checkboxes, updated as work completes
 
-**How to apply:** All development decisions should prioritize low latency (sub-millisecond timing matters for rhythm game accuracy), terminal compatibility (tmux/iTerm2), and the vim-centric UX paradigm (NORMAL mode for playing, INSERT mode for commands). Read PROGRESS.md at session start to know where we left off. Read SPEC.md for implementation guidance.
+**How to apply:** All development decisions should prioritize low latency (sub-millisecond timing matters for rhythm game accuracy), terminal compatibility (tmux/iTerm2), and the vim-centric UX paradigm (NORMAL mode for playing, COMMAND mode via `:` key). Read PROGRESS.md at session start to know where we left off. Read SPEC.md for implementation guidance.

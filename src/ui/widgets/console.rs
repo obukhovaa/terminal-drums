@@ -17,7 +17,7 @@ pub fn render(frame: &mut Frame, area: Rect, state: &GameState, theme: &Theme) {
 
     // Check for status message to show (auto-fades after 3 seconds)
     // Skip if user is typing — input takes priority
-    if state.input_mode != InputMode::Insert {
+    if state.input_mode != InputMode::Command {
         if let Some((ref msg, shown_at)) = state.status_message {
             if shown_at.elapsed().as_secs() < 3 {
                 render_status_message(frame, area, msg, theme);
@@ -39,15 +39,15 @@ pub fn render(frame: &mut Frame, area: Rect, state: &GameState, theme: &Theme) {
                         .add_modifier(Modifier::BOLD),
                 ),
                 Span::styled(
-                    "  -- i or : to enter commands --",
+                    "  -- : to enter commands --",
                     Style::default().fg(theme.fg_dim).bg(theme.status_bg),
                 ),
             ]);
             let para = Paragraph::new(line).style(Style::default().bg(theme.status_bg));
             frame.render_widget(para, area);
         }
-        InputMode::Insert => {
-            render_insert_mode(frame, area, state, theme);
+        InputMode::Command => {
+            render_command_mode(frame, area, state, theme);
         }
     }
 
@@ -135,7 +135,7 @@ fn render_status_indicators(
     }
 }
 
-fn render_insert_mode(frame: &mut Frame, area: Rect, state: &GameState, theme: &Theme) {
+fn render_command_mode(frame: &mut Frame, area: Rect, state: &GameState, theme: &Theme) {
     let input = &state.console_input;
     let cursor = state.console_cursor;
 
@@ -165,9 +165,9 @@ fn render_insert_mode(frame: &mut Frame, area: Rect, state: &GameState, theme: &
         ""
     };
 
-    // Mode indicator prefix: pencil INSERT pencil  > /text
+    // Mode indicator prefix: pencil COMMAND pencil  > /text
     let mode_prefix = Span::styled(
-        " \u{270E} INSERT ",
+        " \u{270E} COMMAND ",
         Style::default()
             .fg(theme.accent)
             .bg(theme.console_bg)

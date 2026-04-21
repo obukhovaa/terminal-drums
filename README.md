@@ -2,9 +2,18 @@
 
 A TUI drum trainer for programmers. Load any MIDI file, see notes scroll down a highway, hit the right keys in time, and get scored on accuracy. Built with Rust, ratatui, kira, and midly.
 
-Vim-style modal input: you play drums in Normal mode and type commands in Insert mode.
+Vim-style modal input: you play drums in Normal mode and type commands in Command mode.
 
 ## Install
+
+### Homebrew (macOS)
+
+```
+brew tap obukhovaa/terminal-drums
+brew install tdrums
+```
+
+### From source
 
 Requires Rust 1.75+.
 
@@ -49,12 +58,11 @@ Terminal Drums uses vim-style modal input.
 
 | Key        | Action              |
 |------------|---------------------|
-| `i`        | Enter Insert mode   |
-| `:`        | Enter Insert mode with `/` pre-filled |
+| `:`        | Enter Command mode (with `/` pre-filled) |
 | `Ctrl+Q`   | Quit                |
 | `Ctrl+C`   | Quit                |
 
-**Insert mode** — type slash commands in the console.
+**Command mode** — type slash commands in the console.
 
 | Key        | Action              |
 |------------|---------------------|
@@ -124,7 +132,7 @@ Set preset in config or override individual keys (see Configuration below).
 
 ## Commands
 
-Press `:` or `i` then type a command. Commands support prefix matching and Tab autocomplete.
+Press `:` then type a command. Commands support prefix matching and Tab autocomplete.
 
 ### Playback
 
