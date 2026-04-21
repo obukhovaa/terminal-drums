@@ -17,8 +17,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - target: x86_64-apple-darwin
-            os: macos-13
           - target: aarch64-apple-darwin
             os: macos-14
           - target: x86_64-unknown-linux-gnu
@@ -112,7 +110,6 @@ jobs:
           REPO="obukhovaa/terminal-drums"
 
           SHA_DARWIN_ARM64=$(sha256sum artifacts/aarch64-apple-darwin/*.tar.gz | awk '{print $1}')
-          SHA_DARWIN_AMD64=$(sha256sum artifacts/x86_64-apple-darwin/*.tar.gz | awk '{print $1}')
           SHA_LINUX_AMD64=$(sha256sum artifacts/x86_64-unknown-linux-gnu/*.tar.gz | awk '{print $1}')
 
           cat > formula.rb << EOF
@@ -126,10 +123,6 @@ jobs:
               on_arm do
                 url "https://github.com/${REPO}/releases/download/v${VERSION}/tdrums-${VERSION}-aarch64-apple-darwin.tar.gz"
                 sha256 "${SHA_DARWIN_ARM64}"
-              end
-              on_intel do
-                url "https://github.com/${REPO}/releases/download/v${VERSION}/tdrums-${VERSION}-x86_64-apple-darwin.tar.gz"
-                sha256 "${SHA_DARWIN_AMD64}"
               end
             end
 
