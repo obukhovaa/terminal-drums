@@ -9,8 +9,7 @@ Vim-style modal input: you play drums in Normal mode and type commands in Comman
 ### Homebrew (macOS)
 
 ```
-brew tap obukhovaa/terminal-drums
-brew install tdrums
+brew install obukhovaa/tap/tdrums
 ```
 
 ### From source
